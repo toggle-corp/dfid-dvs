@@ -165,8 +165,7 @@ export default class NavMenu extends React.PureComponent {
         return (
             <div
                 ref={(el) => { this.menu = el; }}
-                styleName="nav-menu"
-                className={className}
+                className={`${className} nav-menu`}
             >
                 <List
                     data={navLinks}
@@ -176,7 +175,7 @@ export default class NavMenu extends React.PureComponent {
 
                 <DropdownMenu
                     iconName={iconNames.overflowHorizontal}
-                    styleName="overflow-menu"
+                    className="overflow-menu"
                     hideDropdownIcon
                     dropdownClassName={styles['navbar-overflow-dropdown']}
                 >

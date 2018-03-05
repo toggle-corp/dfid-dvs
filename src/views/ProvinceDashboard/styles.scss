@@ -1,0 +1,24 @@
+@import '../../stylesheets/base';
+
+.province-dashboard {
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    .map {
+        flex-basis: 60%;
+        height: 100%;
+    }
+
+    .viz {
+        display: flex;
+        flex-basis: 40%;
+        flex-direction: column;
+        height: 100%;
+
+        .chart {
+            flex-basis: 50%;
+            width: 100%;
+        }
+    }
+}
