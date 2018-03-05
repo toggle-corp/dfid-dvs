@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
     Switch,
     Route,
@@ -8,6 +8,7 @@ import {
 
 import ExclusivelyPublicRoute from './vendor/react-store/components/General/ExclusivelyPublicRoute';
 import PrivateRoute from './vendor/react-store/components/General/PrivateRoute';
+import Navbar from './components/Navbar';
 
 import { pathNames } from './constants';
 import views from './views';
@@ -20,6 +21,8 @@ const ROUTE = {
 
 const routesOrder = [
     'dashboard',
+    // 'map',
+    // 'visualization',
 ];
 
 const routes = {
@@ -27,14 +30,27 @@ const routes = {
 };
 
 const propTypes = {
-    authenticated: PropTypes.bool.isRequired,
+    authenticated: PropTypes.bool,
+};
+
+const defaultProps = {
+    authenticated: true,
 };
 
 @withRouter
 export default class Multiplexer extends React.PureComponent {
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
-    getRoutes = () => (
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            pending: true,
+        };
+    }
+
+    renderRoutes = () => (
         routesOrder.map((routeId) => {
             const view = views[routeId];
             const path = pathNames[routeId];
@@ -45,7 +61,6 @@ export default class Multiplexer extends React.PureComponent {
             }
 
             const { authenticated } = this.props;
-
             const redirectTo = routes[routeId].redirectTo;
 
             switch (routes[routeId].type) {
@@ -88,10 +103,24 @@ export default class Multiplexer extends React.PureComponent {
     )
 
     render() {
+        const Routes = this.renderRoutes;
+        const navLinks = [
+            'map',
+            'visualization',
+        ];
+
         return (
-            <Switch>
-                { this.getRoutes() }
-            </Switch>
+            <Fragment>
+                <Navbar
+                    className="navbar"
+                    navLinks={navLinks}
+                />
+                <div className="dfid-main-content">
+                    <Switch>
+                        <Routes />
+                    </Switch>
+                </div>
+            </Fragment>
         );
     }
 }

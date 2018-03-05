@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { getRandomFromList } from './vendor/react-store/utils/common';
 
 import Multiplexer from './Multiplexer';
+import './stylesheets/base.scss';
 
 export default class App extends React.PureComponent {
     constructor(props) {
