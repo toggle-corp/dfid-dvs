@@ -44,6 +44,10 @@ export default class ProvinceDashboard extends React.PureComponent {
             this.colorMapping[province.provinceNumber] = getHexFromRgb(scale(value));
         });
 
+        this.chartData = provinces.map(p => ({
+            provinceNumber: p.provinceNumber,
+            [indicator]: p[indicator],
+        }));
         this.mapStrokeColor = getHexFromRgb(scale(Math.max(...allValues)));
     }
 
@@ -87,14 +91,14 @@ export default class ProvinceDashboard extends React.PureComponent {
                 <div className={styles.viz}>
                     <PieChart
                         className={styles.chart}
-                        data={provinces}
+                        data={this.chartData}
                         valueAccessor={this.valueAccessor}
                         labelAccessor={this.labelAccessor}
                         colorAccessor={this.colorAccessor}
                     />
                     <HorizontalBar
                         className={styles.chart}
-                        data={provinces}
+                        data={this.chartData}
                         valueAccessor={this.valueAccessor}
                         labelAccessor={this.labelAccessor}
                         colorAccessor={this.colorAccessor}
