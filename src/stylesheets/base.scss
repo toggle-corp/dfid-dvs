@@ -1,0 +1,24 @@
+@import 'colors';
+@import 'utils';
+@import 'dimens';
+
+$font-family-sans-serif: 'PT Sans', sans-serif;
+$font-family-monospace: 'Oxygen Mono', monospace;
+$font-family-icons: 'Ionicons';
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    font-family: $font-family-sans-serif;
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+}
+
