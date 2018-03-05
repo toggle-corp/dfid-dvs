@@ -32,10 +32,10 @@ export default class ProvinceDashboard extends React.PureComponent {
 
     calculateNewData(indicator) {
         const scale = scaleSequential(interpolateFunction);
-        const populationValues = provinces.map(p => p[indicator]);
+        const allValues = provinces.map(p => p[indicator]);
         scale.domain([
             0,
-            Math.max(...populationValues),
+            Math.max(...allValues),
         ]);
 
         this.colorMapping = {};
@@ -43,15 +43,17 @@ export default class ProvinceDashboard extends React.PureComponent {
             const value = province[indicator];
             this.colorMapping[province.provinceNumber] = getHexFromRgb(scale(value));
         });
+
+        this.mapStrokeColor = getHexFromRgb(scale(Math.max(...allValues)));
     }
 
-    handleMapClick = (indicator) => {
-        if (this.state.selection !== indicator) {
-            this.setState({ selection: indicator });
-        } else {
-            this.setState({ selection: undefined });
-        }
-    }
+    // handleMapClick = (indicator) => {
+    //     if (this.state.selection !== indicator) {
+    //         this.setState({ selection: indicator });
+    //     } else {
+    //         this.setState({ selection: undefined });
+    //     }
+    // }
 
     handleIndicatorChange = (indicator) => {
         this.calculateNewData(indicator);
@@ -70,9 +72,10 @@ export default class ProvinceDashboard extends React.PureComponent {
                     geojson={provinceGeoJson}
                     idKey="D_ID"
                     labelKey="Title"
-                    selections={this.state.selection ? [this.state.selection] : []}
+                    // selections={this.state.selection ? [this.state.selection] : []}
                     onClick={this.handleMapClick}
                     colorMapping={this.colorMapping}
+                    strokeColor={this.mapStrokeColor}
                 />
                 <SelectInput
                     className={styles.indicator}

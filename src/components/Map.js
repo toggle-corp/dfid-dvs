@@ -10,6 +10,8 @@ const propTypes = {
     labelKey: PropTypes.string,
     // eslint-disable-next-line react/no-unused-prop-types
     colorMapping: PropTypes.objectOf(PropTypes.string),
+    // eslint-disable-next-line react/no-unused-prop-types
+    strokeColor: PropTypes.string,
 
     selections: PropTypes.arrayOf(PropTypes.any),
     onClick: PropTypes.func,
@@ -22,6 +24,7 @@ const defaultProps = {
     colorMapping: {
         undefined: '#088',
     },
+    strokeColor: '#fff',
 
     selections: [],
     onClick: undefined,
@@ -80,15 +83,23 @@ export default class Map extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (
-            this.props.geojson !== nextProps.geojson ||
-            this.props.colorMapping !== nextProps.colorMapping
-        ) {
+        if (this.props.geojson !== nextProps.geojson) {
             this.loadMapLayers(nextProps);
             return;
         }
 
         const { map } = this.state;
+
+        if (this.props.colorMapping !== nextProps.colorMapping && map) {
+            const { idKey, colorMapping } = nextProps;
+            map.setPaintProperty('geojson-fill', 'fill-color', {
+                property: idKey,
+                type: 'categorical',
+                stops: Object.entries(colorMapping),
+                default: '#088',
+            });
+        }
+
         if (this.props.selections !== nextProps.selections && map) {
             const { selections, idKey } = nextProps;
             map.setFilter('geojson-selected', getInFilter(idKey, selections));
@@ -177,7 +188,7 @@ export default class Map extends React.PureComponent {
 
     loadMapLayers(props) {
         const { map } = this.state;
-        const { geojson, idKey, colorMapping, selections } = props;
+        const { geojson, idKey, colorMapping, selections, strokeColor } = props;
 
         if (!map || !geojson) {
             return;
@@ -221,6 +232,15 @@ export default class Map extends React.PureComponent {
             paint: basePaint,
         });
         map.addLayer({
+            id: 'geojson-stroke',
+            type: 'line',
+            source: 'geojson',
+            paint: {
+                'line-color': strokeColor,
+                'line-width': 1,
+            },
+        });
+        map.addLayer({
             id: 'geojson-hover',
             type: 'fill',
             source: 'geojson',
@@ -243,7 +263,7 @@ export default class Map extends React.PureComponent {
             filter: getInFilter(idKey, selections),
         });
 
-        this.layers = [...this.layers, 'geojson-fill', 'geojson-hover', 'geojson-selected'];
+        this.layers = [...this.layers, 'geojson-stroke', 'geojson-fill', 'geojson-hover', 'geojson-selected'];
     }
 
     render() {

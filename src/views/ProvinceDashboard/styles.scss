@@ -1,8 +1,8 @@
 @import '../../stylesheets/base';
 
 .province-dashboard {
-    position: relative;
     display: flex;
+    position: relative;
     width: 100%;
     height: 100%;
 
@@ -15,6 +15,7 @@
         position: absolute;
         top: $spacing-medium;
         left: $spacing-medium;
+        width: 480px;
     }
 
     .viz {
