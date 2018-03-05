@@ -1,6 +1,7 @@
 @import '../../stylesheets/base';
 
 .province-dashboard {
+    position: relative;
     display: flex;
     width: 100%;
     height: 100%;
@@ -8,6 +9,12 @@
     .map {
         flex-basis: 60%;
         height: 100%;
+    }
+
+    .indicator {
+        position: absolute;
+        top: $spacing-medium;
+        left: $spacing-medium;
     }
 
     .viz {

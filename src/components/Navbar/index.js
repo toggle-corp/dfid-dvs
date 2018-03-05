@@ -32,6 +32,7 @@ export default class Navbar extends React.PureComponent {
 
         return (
             <nav className={classNames.join(' ')}>
+                Provinces
                 <NavMenu
                     links={navLinks}
                     className={styles.mainMenu}

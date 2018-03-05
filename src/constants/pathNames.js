@@ -1,7 +1,7 @@
 const pathNames = {
     dashboard: '/',
-    map: '/map',
-    visualization: '/visualization',
+    // map: '/map',
+    // visualization: '/visualization',
 };
 
 export default pathNames;

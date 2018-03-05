@@ -19,7 +19,7 @@ import styles from './styles.scss';
 
 const propTypes = {
     links: PropTypes.arrayOf(
-        PropTypes.object,
+        PropTypes.any,
     ),
     className: PropTypes.string,
 };

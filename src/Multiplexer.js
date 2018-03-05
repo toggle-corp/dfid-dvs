@@ -105,8 +105,8 @@ export default class Multiplexer extends React.PureComponent {
     render() {
         const Routes = this.renderRoutes;
         const navLinks = [
-            'map',
-            'visualization',
+            // 'map',
+            // 'visualization',
         ];
 
         return (

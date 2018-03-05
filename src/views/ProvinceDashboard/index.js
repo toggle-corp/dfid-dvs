@@ -3,9 +3,10 @@ import { interpolateYlGn as interpolateFunction } from 'd3-scale-chromatic';
 import { scaleSequential } from 'd3-scale';
 import * as d3 from 'd3'; // eslint-disable-line no-unused-vars
 
-import { provinces } from '../../data/province';
+import { provinceMeta, provinces } from '../../data/province';
 import provinceGeoJson from '../../data/province.geo.json';
 
+import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
 import PieChart from '../../vendor/react-store/components/Visualization/PieChart';
 import HorizontalBar from '../../vendor/react-store/components/Visualization/HorizontalBar';
 import { getHexFromRgb } from '../../vendor/react-store/utils/common';
@@ -20,33 +21,44 @@ export default class ProvinceDashboard extends React.PureComponent {
         super(props);
         this.state = {
             selection: undefined,
+            indicator: 'totalPopulation',
         };
+        this.indicatorOptions = Object.keys(provinceMeta).map(key => ({
+            key,
+            label: provinceMeta[key].title,
+        }));
+        this.calculateNewData(this.state.indicator);
+    }
 
-        const key = 'totalPopulation';
+    calculateNewData(indicator) {
         const scale = scaleSequential(interpolateFunction);
-        const populationValues = provinces.map(p => p[key]);
+        const populationValues = provinces.map(p => p[indicator]);
         scale.domain([
             0,
             Math.max(...populationValues),
         ]);
 
         this.colorMapping = {};
-        this.key = key;
         provinces.forEach((province) => {
-            const value = province[key];
+            const value = province[indicator];
             this.colorMapping[province.provinceNumber] = getHexFromRgb(scale(value));
         });
     }
 
-    handleMapClick = (key) => {
-        if (this.state.selection !== key) {
-            this.setState({ selection: key });
+    handleMapClick = (indicator) => {
+        if (this.state.selection !== indicator) {
+            this.setState({ selection: indicator });
         } else {
             this.setState({ selection: undefined });
         }
     }
 
-    valueAccessor = data => data[this.key];
+    handleIndicatorChange = (indicator) => {
+        this.calculateNewData(indicator);
+        this.setState({ indicator });
+    }
+
+    valueAccessor = data => data[this.state.indicator];
     labelAccessor = data => `Province #${data.provinceNumber}`;
     colorAccessor = data => this.colorMapping[data.provinceNumber];
 
@@ -61,6 +73,13 @@ export default class ProvinceDashboard extends React.PureComponent {
                     selections={this.state.selection ? [this.state.selection] : []}
                     onClick={this.handleMapClick}
                     colorMapping={this.colorMapping}
+                />
+                <SelectInput
+                    className={styles.indicator}
+                    options={this.indicatorOptions}
+                    value={this.state.indicator}
+                    onChange={this.handleIndicatorChange}
+                    hideClearButton
                 />
                 <div className={styles.viz}>
                     <PieChart

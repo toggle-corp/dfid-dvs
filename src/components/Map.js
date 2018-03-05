@@ -80,7 +80,10 @@ export default class Map extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.geojson !== nextProps.geojson) {
+        if (
+            this.props.geojson !== nextProps.geojson ||
+            this.props.colorMapping !== nextProps.colorMapping
+        ) {
             this.loadMapLayers(nextProps);
             return;
         }
@@ -191,14 +194,8 @@ export default class Map extends React.PureComponent {
             { padding: 48 },
         );
 
-        if (this.sources.indexOf('geojson') >= 0) {
-            map.getSource('geojson').setData({
-                type: 'FeatureCollection',
-                features: [],
-            });
-            map.getSource('geojson').setData(geojson);
-            map.setFilter('geojson-selected', getInFilter(idKey, selections));
-            return;
+        if (this.sources.length > 0 || this.layers.length > 0) {
+            this.destroyMapLayers();
         }
 
         const basePaint = {
