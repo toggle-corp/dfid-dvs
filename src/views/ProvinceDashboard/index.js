@@ -3,13 +3,14 @@ import { interpolateGnBu as interpolateFunction } from 'd3-scale-chromatic';
 import { scaleSequential } from 'd3-scale';
 import * as d3 from 'd3'; // eslint-disable-line no-unused-vars
 
-import { provinceMeta, provinces } from '../../data/province';
-import provinceGeoJson from '../../data/province.geo.json';
-
 import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
 import PieChart from '../../vendor/react-store/components/Visualization/PieChart';
 import HorizontalBar from '../../vendor/react-store/components/Visualization/HorizontalBar';
+import ChartSynchronizer from '../../vendor/react-store/components/Visualization/ChartSynchronizer';
 import { getHexFromRgb } from '../../vendor/react-store/utils/common';
+
+import { provinceMeta, provinces } from '../../data/province';
+import provinceGeoJson from '../../data/province.geo.json';
 
 import Map from '../../components/Map';
 import styles from './styles.scss';
@@ -28,6 +29,8 @@ export default class ProvinceDashboard extends React.PureComponent {
             label: provinceMeta[key].title,
         }));
         this.calculateNewData(this.state.indicator);
+
+        this.chartSynchronizer = new ChartSynchronizer(this.idAccessor);
     }
 
     calculateNewData(indicator) {
@@ -64,6 +67,7 @@ export default class ProvinceDashboard extends React.PureComponent {
         this.setState({ indicator });
     }
 
+    idAccessor = data => data.provinceNumber || data.D_ID;
     valueAccessor = data => data[this.state.indicator];
     labelAccessor = data => `Province #${data.provinceNumber}`;
     colorAccessor = data => this.colorMapping[data.provinceNumber];
@@ -80,6 +84,7 @@ export default class ProvinceDashboard extends React.PureComponent {
                     onClick={this.handleMapClick}
                     colorMapping={this.colorMapping}
                     strokeColor={this.mapStrokeColor}
+                    synchronizer={this.chartSynchronizer}
                 />
                 <SelectInput
                     className={styles.indicator}
@@ -95,6 +100,8 @@ export default class ProvinceDashboard extends React.PureComponent {
                         valueAccessor={this.valueAccessor}
                         labelAccessor={this.labelAccessor}
                         colorAccessor={this.colorAccessor}
+                        separator=","
+                        synchronizer={this.chartSynchronizer}
                     />
                     <HorizontalBar
                         className={styles.chart}
@@ -102,6 +109,9 @@ export default class ProvinceDashboard extends React.PureComponent {
                         valueAccessor={this.valueAccessor}
                         labelAccessor={this.labelAccessor}
                         colorAccessor={this.colorAccessor}
+                        showGridLines={false}
+                        separator=","
+                        synchronizer={this.chartSynchronizer}
                     />
                 </div>
             </div>

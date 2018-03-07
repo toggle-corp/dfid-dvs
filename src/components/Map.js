@@ -15,6 +15,8 @@ const propTypes = {
 
     selections: PropTypes.arrayOf(PropTypes.any),
     onClick: PropTypes.func,
+
+    synchronizer: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 const defaultProps = {
     className: '',
@@ -28,6 +30,8 @@ const defaultProps = {
 
     selections: [],
     onClick: undefined,
+
+    synchronizer: undefined,
 };
 
 const getInFilter = (key, values) => {
@@ -80,6 +84,10 @@ export default class Map extends React.PureComponent {
         }, 200);
 
         this.initializeMap(map);
+
+        if (this.props.synchronizer) {
+            this.props.synchronizer.register(this);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -116,6 +124,10 @@ export default class Map extends React.PureComponent {
             map.remove();
             this.setState({ map: undefined });
         }
+
+        if (this.props.synchronizer) {
+            this.props.synchronizer.unregister(this);
+        }
     }
 
     getClassName() {
@@ -127,9 +139,29 @@ export default class Map extends React.PureComponent {
         return classNames.join(' ');
     }
 
+    handleMouseOver = (id) => {
+        const { map } = this.state;
+        const { idKey } = this.props;
+        if (!map) {
+            return;
+        }
+
+        map.setFilter('geojson-hover', ['==', idKey, id]);
+    }
+
+    handleMouseOut = () => {
+        const { map } = this.state;
+        const { idKey } = this.props;
+        if (!map) {
+            return;
+        }
+
+        map.setFilter('geojson-hover', ['==', idKey, '']);
+    }
+
     /* eslint-disable no-param-reassign */
     initializeMap = (map) => {
-        const { idKey, labelKey } = this.props;
+        const { idKey, labelKey, synchronizer } = this.props;
 
         const popup = new mapboxgl.Popup({
             closeButton: false,
@@ -145,10 +177,16 @@ export default class Map extends React.PureComponent {
             }
         });
 
+        let lastFeature;
         map.on('mouseenter', 'geojson-fill', (e) => {
             const feature = e.features[0];
             popup.setHTML(feature.properties[labelKey])
                 .addTo(map);
+
+            if (synchronizer) {
+                lastFeature = feature;
+                synchronizer.onMouseOver(this, feature.properties[idKey]);
+            }
         });
 
         map.on('mousemove', 'geojson-fill', (e) => {
@@ -160,6 +198,12 @@ export default class Map extends React.PureComponent {
                 e.point.x,
                 e.point.y - 8,
             ])).setHTML(feature.properties[labelKey]);
+
+            if (synchronizer && lastFeature !== feature) {
+                synchronizer.onMouseOut(this, lastFeature.properties[idKey]);
+                lastFeature = feature;
+                synchronizer.onMouseOver(this, feature.properties[idKey]);
+            }
         });
 
         map.on('mouseleave', 'geojson-fill', () => {
@@ -167,6 +211,10 @@ export default class Map extends React.PureComponent {
             map.getCanvas().style.cursor = '';
 
             popup.remove();
+
+            if (synchronizer && lastFeature) {
+                synchronizer.onMouseOut(this, lastFeature.properties[idKey]);
+            }
         });
 
         map.on('click', 'geojson-fill', (e) => {
@@ -188,10 +236,17 @@ export default class Map extends React.PureComponent {
 
     loadMapLayers(props) {
         const { map } = this.state;
-        const { geojson, idKey, colorMapping, selections, strokeColor } = props;
+        const { geojson, idKey, colorMapping, selections, strokeColor, synchronizer } = props;
 
         if (!map || !geojson) {
             return;
+        }
+
+        if (synchronizer) {
+            synchronizer.removeAllElements(this);
+            geojson.features.forEach((f) => {
+                synchronizer.addElement(this, f.properties[idKey], f.properties);
+            });
         }
 
         map.fitBounds(
@@ -246,8 +301,8 @@ export default class Map extends React.PureComponent {
             source: 'geojson',
             paint: {
                 ...basePaint,
-                'fill-color': '#fff',
-                'fill-opacity': 0.2,
+                'fill-color': '#155f9f',
+                'fill-opacity': 0.9,
             },
             filter: ['==', idKey, ''],
         });
