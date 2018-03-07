@@ -4,13 +4,33 @@ $color-text-on-navbar: get-text-color($color-navbar);
 $color-text-on-accent: get-text-color($color-accent);
 
 .navbar {
+    @include shadow-medium;
     display: flex;
+    position: relative;
     align-items: center;
     justify-content: space-between;
+    z-index: 1;
     background-color: $color-navbar;
     padding: 0 $spacing-medium;
     height: 48px;
     color: $color-text-on-navbar;
+
+    .left-container {
+        display: flex;
+        align-items: center;
+        padding: $spacing-medium;
+        height: 100%;
+
+        .logo {
+            margin-right: $spacing-small;
+            height: 100%;
+        }
+
+        .heading {
+            margin: 0;
+            text-transform: uppercase;
+        }
+    }
 
     .main-menu {
         flex-grow: 1;

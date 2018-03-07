@@ -1,7 +1,11 @@
 $color-text-on-light: rgba(0, 0, 0, .7);
 $color-text-on-dark: rgba(255, 255, 255, .8);
 
-$color-primary: #2e7d32;
+$color-primary: #155f9f;
 $color-accent: $color-primary;
 $color-navbar: $color-primary;
 $color-info: $color-primary;
+
+$color-shadow-normal: rgba(0, 0, 0, .5);
+$color-shadow-light: rgba(0, 0, 0, .3);
+$color-shadow-dark: rgba(0, 0, 0, .8);

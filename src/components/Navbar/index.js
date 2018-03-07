@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 
+import logo from '../../resources/img/logo.png';
 import NavMenu from './NavMenu';
 import styles from './styles.scss';
 
@@ -32,7 +33,16 @@ export default class Navbar extends React.PureComponent {
 
         return (
             <nav className={classNames.join(' ')}>
-                Provinces
+                <div className={styles['left-container']}>
+                    <img
+                        src={logo}
+                        className={styles.logo}
+                        alt="DFID Nepal"
+                    />
+                    <h2 className={styles.heading}>
+                        Provinces
+                    </h2>
+                </div>
                 <NavMenu
                     links={navLinks}
                     className={styles.mainMenu}

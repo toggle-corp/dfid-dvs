@@ -1,5 +1,5 @@
 import React from 'react';
-import { interpolateYlGn as interpolateFunction } from 'd3-scale-chromatic';
+import { interpolateGnBu as interpolateFunction } from 'd3-scale-chromatic';
 import { scaleSequential } from 'd3-scale';
 import * as d3 from 'd3'; // eslint-disable-line no-unused-vars
 
@@ -35,7 +35,7 @@ export default class ProvinceDashboard extends React.PureComponent {
         const allValues = provinces.map(p => p[indicator]);
         scale.domain([
             0,
-            Math.max(...allValues),
+            Math.max(...allValues) * 1.25,
         ]);
 
         this.colorMapping = {};
