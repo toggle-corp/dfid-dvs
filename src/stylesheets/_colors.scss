@@ -6,6 +6,11 @@ $color-accent: $color-primary;
 $color-navbar: $color-primary;
 $color-info: $color-primary;
 
+$color-separator: rgba(0, 0, 0, .1);
+$color-separator-alt: rgba(0, 0, 0, .2);
+$color-separator-hover: rgba(0, 0, 0, .3);
+$color-separator-light: rgba(255, 255, 255, .1);
+
 $color-shadow-normal: rgba(0, 0, 0, .5);
 $color-shadow-light: rgba(0, 0, 0, .3);
 $color-shadow-dark: rgba(0, 0, 0, .8);

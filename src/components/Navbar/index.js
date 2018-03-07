@@ -40,7 +40,7 @@ export default class Navbar extends React.PureComponent {
                         alt="DFID Nepal"
                     />
                     <h2 className={styles.heading}>
-                        Provinces
+                        DFID
                     </h2>
                 </div>
                 <NavMenu

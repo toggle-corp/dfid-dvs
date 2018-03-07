@@ -1,5 +1,7 @@
 @import '../../stylesheets/base';
 
+$color-background-translucent: rgba(255, 255, 255, .9);
+
 .province-dashboard {
     display: flex;
     position: relative;
@@ -12,9 +14,13 @@
     }
 
     .indicator {
+        @include shadow-medium;
         position: absolute;
         top: $spacing-medium;
         left: $spacing-medium;
+        border-radius: 3px;
+        background-color: $color-background-translucent;
+        padding: $spacing-small;
         width: 480px;
     }
 
@@ -22,7 +28,19 @@
         display: flex;
         flex-basis: 40%;
         flex-direction: column;
+        border-left: $width-separator-thin solid $color-separator;
         height: 100%;
+
+        .header {
+            flex-shrink: 0;
+            border-bottom: $width-separator-thin solid $color-separator;
+            padding: $spacing-extra-small $spacing-medium-alt;
+            color: $color-text-on-light;
+
+            .heading {
+                margin: 0;
+            }
+        }
 
         .chart {
             flex-basis: 50%;

@@ -92,8 +92,14 @@ export default class ProvinceDashboard extends React.PureComponent {
                     value={this.state.indicator}
                     onChange={this.handleIndicatorChange}
                     hideClearButton
+                    showHintAndError={false}
                 />
                 <div className={styles.viz}>
+                    <header className={styles.header}>
+                        <h2 className={styles.heading}>
+                            Provinces
+                        </h2>
+                    </header>
                     <PieChart
                         className={styles.chart}
                         data={this.chartData}

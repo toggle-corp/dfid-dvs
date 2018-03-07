@@ -301,7 +301,7 @@ export default class Map extends React.PureComponent {
             source: 'geojson',
             paint: {
                 ...basePaint,
-                'fill-color': '#155f9f',
+                'fill-color': '#ebb28d',
                 'fill-opacity': 0.9,
             },
             filter: ['==', idKey, ''],
